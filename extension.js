@@ -2,12 +2,16 @@ const vscode = require('vscode');
 
 // Install
 function activate(context) {
-	// Implement commands from package.json
-	let disposable = vscode.commands.registerCommand('terminal-macros.helloWorld', function () {
-		vscode.window.showInformationMessage('Hello World from Terminal Macros!');
+	// Implement commands here, defined in package.json
+	commands = vscode.commands.registerCommand('terminalMacros.executeCommand', () => {
+		if (vscode.window.activeTerminal) {
+			// lastCommand = vscode.workspace.getConfiguration('TerminalMacros').get<string>('LastCommand');
+			vscode.window.showInformationMessage('Executing Command');
+			// vscode.window.activeTerminal.sendText(lastCommand, true);
+		}
 	});
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(commands);
 }
 
 // Uninstall

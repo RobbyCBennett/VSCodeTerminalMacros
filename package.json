@@ -1,8 +1,13 @@
-{
-  "name": "terminal-macros",
+{	
+	"name": "terminal-macros",
 	"displayName": "Terminal Macros",
-	"description": "Do anything with the terminal without touching the terminal. Save your file, clear the terminal, and send a custom input to the terminal.",
-	"version": "0.0.1",
+	"description": "Do anything with the terminal without needing to touch the terminal.",
+	"version": "1.0.0",
+	"publisher": "RobbyCBennett",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/RobbyCBennett/VSCodeTerminalMacros.git"
+	},
 	"engines": {
 		"vscode": "^1.54.0"
 	},
@@ -10,14 +15,97 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:terminal-macros.helloWorld"
+        "onCommand:terminalMacros.executeCommand"
 	],
 	"main": "./extension.js",
 	"contributes": {
-		"commands": [{
-			"command": "terminal-macros.helloWorld",
-			"title": "Hello World"
-		}]
+		"commands": [
+			{
+				"command": "terminalMacros.executeCommand",
+				"title": "Execute Command in Terminal"
+			}
+		],
+		"configuration": {
+			"title": "Terminal Macros",
+			"properties": {
+				"Commands": {
+					"type": "array",
+					"items": {
+						"type": [
+							"object"
+						],
+						"properties": {
+							"group": {
+								"type": "string",
+								"description": "Commands sharing the group name will be grouped together in the menu."
+							},
+							"name": {
+								"type": "string",
+								"description": "Name for the command. A human readable string which is rendered prominent."
+							},
+							"command": {
+								"type": "string",
+								"description": "The command to send to the terminal. Variables: {recent}, {file}, {paste}"
+							},
+							"save": {
+								"type": "boolean",
+								"description": "Whether to save the current file before opening the terminal."
+							},
+							"clear": {
+								"type": "boolean",
+								"description": "Whether to clear the line inserting the command."
+							},
+							"execute": {
+								"type": "boolean",
+								"description": "Whether to run the command immediately."
+							}
+						}
+					},
+					"default": [
+						{
+							"group": "General",
+							"name": "Last Command",
+							"command": "{recent}",
+							"save": true,
+							"clear": true,
+							"execute": true
+						},
+						{
+							"group": "General",
+							"name": "Run File",
+							"command": "./{file}",
+							"save": true,
+							"clear": true,
+							"execute": true
+						},
+						{
+							"group": "General",
+							"name": "Paste",
+							"command": "{paste}",
+							"save": true,
+							"clear": true,
+							"execute": true
+						},
+						{
+							"group": "JavaScript",
+							"name": "Node",
+							"command": "npm start",
+							"save": true,
+							"clear": true,
+							"execute": true
+						},
+						{
+							"group": "C/C++",
+							"name": "make",
+							"command": "Make",
+							"save": true,
+							"clear": true,
+							"execute": true
+						}
+					]
+				}
+			}
+		}
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.54.0",
@@ -30,5 +118,4 @@
 		"typescript": "^4.3.2",
 		"vscode-test": "^1.5.2"
     }
-
 }
