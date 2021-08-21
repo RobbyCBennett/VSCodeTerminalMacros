@@ -68,7 +68,8 @@
 							"command": "{recent}",
 							"save": true,
 							"clear": true,
-							"execute": true
+							"execute": true,
+							"focus": false,
 						},
 						{
 							"group": "General",
@@ -76,7 +77,8 @@
 							"command": "./{file}",
 							"save": true,
 							"clear": true,
-							"execute": true
+							"execute": true,
+							"focus": false,
 						},
 						{
 							"group": "General",
@@ -84,7 +86,8 @@
 							"command": "{paste}",
 							"save": true,
 							"clear": true,
-							"execute": true
+							"execute": true,
+							"focus": false,
 						},
 						{
 							"group": "JavaScript",
@@ -92,7 +95,8 @@
 							"command": "npm start",
 							"save": true,
 							"clear": true,
-							"execute": true
+							"execute": true,
+							"focus": false,
 						},
 						{
 							"group": "C/C++",
@@ -100,7 +104,8 @@
 							"command": "Make",
 							"save": true,
 							"clear": true,
-							"execute": true
+							"execute": true,
+							"focus": false,
 						}
 					]
 				}
