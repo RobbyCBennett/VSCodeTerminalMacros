@@ -51,14 +51,17 @@ function prepareTerminal(terminal, stop, logout, clear, execute, command) {
 function activate(context) {
 	// Implement commands here, defined in package.json
 	commands = vscode.commands.registerCommand('terminalMacros.executeCommand', () => {
-		// Options
+		// Get command and options
+		vscode.window.showInformationMessage();
+		group = 'General';
+		name = 'Clear';
+		command = '\u001b[A';
 		save = true;
 		stop = false;
 		logout = false;
 		clear = true;
 		execute = false;
 		focus = false; // Buggy when terminal is hidden. Terminal.show(preserveFocus: true) doesn't work
-		command = '\u001b[A';
 
 		// Get terminal
 		terminal = vscode.window.activeTerminal;
