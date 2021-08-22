@@ -67,6 +67,7 @@
 							"name": "Last Command",
 							"command": "{recent}",
 							"save": true,
+							"stop": false,
 							"clear": true,
 							"execute": true,
 							"focus": false
@@ -76,6 +77,7 @@
 							"name": "Run File",
 							"command": "./{file}",
 							"save": true,
+							"stop": false,
 							"clear": true,
 							"execute": true,
 							"focus": false
@@ -85,6 +87,7 @@
 							"name": "Paste",
 							"command": "{paste}",
 							"save": true,
+							"stop": true,
 							"clear": true,
 							"execute": true,
 							"focus": false
@@ -94,6 +97,7 @@
 							"name": "Node",
 							"command": "npm start",
 							"save": true,
+							"stop": true,
 							"clear": true,
 							"execute": true,
 							"focus": false
@@ -103,6 +107,7 @@
 							"name": "make",
 							"command": "Make",
 							"save": true,
+							"stop": false,
 							"clear": true,
 							"execute": true,
 							"focus": false
