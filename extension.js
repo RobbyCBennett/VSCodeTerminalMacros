@@ -20,7 +20,7 @@ function activate(context) {
 		}
 
 		// Send the command
-		terminal.show(!focus);
+		terminal.show(focus);
 		terminal.sendText('echo "Hello world :)"', execute);
 	});
 
