@@ -1,4 +1,5 @@
 const vscode = require('vscode');
+const path = require('path');
 
 // vscode.window.showInformationMessage('Info');
 // vscode.window.showErrorMessage('Error');
@@ -26,7 +27,7 @@ function getDefault(string) {
 async function prepareCommand(commandText, terminalName, clear) {
 	commandText = commandText.replaceAll('{recent}', '\u001b[A');
 	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
-	// commandText = commandText.replaceAll('{file}', getEnvironment(uri || getOpenFileUri()).resource); // Fix me
+	commandText = commandText.replaceAll('{file}', path.basename(vscode.window.activeTextEditor.document.fileName));
 
 	// Fix for clearing the screen and then getting a recent command in cmd
 	if (terminalName == 'cmd' && clear && commandText == '\u001b[A') {
@@ -75,7 +76,7 @@ async function executeCommand() {
 	// Get command and options
 	group = 'General';
 	name = 'Recent';
-	commandText = 'echo {paste}';
+	commandText = '{recent}';
 	save = true;
 	stop = false;
 	logout = false;

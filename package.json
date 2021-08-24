@@ -12,8 +12,18 @@
 		"vscode": "^1.54.0"
 	},
 	"categories": [
+		"Debuggers",
+		"Keymaps",
 		"Other"
 	],
+	"keywords": [
+		"Terminal",
+		"Command",
+		"Execute",
+		"Macro",
+		"Shortcut"
+	],
+	"icon": "icon.png",
 	"activationEvents": [
         "onCommand:terminalMacros.executeCommand"
 	],
