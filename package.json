@@ -118,46 +118,29 @@
 						{
 							"group": "General",
 							"name": "Run File",
-							"command": "./{file}",
-							"save": true,
-							"stop": false,
-							"logout": false,
-							"clear": true,
-							"execute": true,
-							"focus": false
+							"command": "./{file}"
 						},
 						{
 							"group": "General",
 							"name": "Paste",
-							"command": "{paste}",
-							"save": true,
-							"stop": true,
-							"logout": true,
-							"clear": true,
-							"execute": true,
-							"focus": false
+							"command": "{paste}"
 						},
 						{
 							"group": "JavaScript",
 							"name": "Node",
 							"command": "npm start",
-							"save": true,
-							"stop": true,
-							"logout": true,
-							"clear": true,
-							"execute": true,
-							"focus": false
+							"stop": true
 						},
 						{
 							"group": "C/C++",
-							"name": "make",
-							"command": "Make",
-							"save": true,
-							"stop": false,
-							"logout": false,
-							"clear": true,
-							"execute": true,
-							"focus": false
+							"name": "Make",
+							"command": "make"
+						},
+						{
+							"group": "C/C++",
+							"name": "Make Run",
+							"command": "make run",
+							"focus": true
 						}
 					]
 				}

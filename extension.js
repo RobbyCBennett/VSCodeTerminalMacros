@@ -15,7 +15,29 @@ const vscode = require('vscode');
 //		\26			Paste
 //		\27			Clear line after cursor
 
-function prepareTerminal(terminal, stop, logout, clear, execute, command) {
+function getCommands() {
+	return vscode.workspace.getConfiguration().get('terminalMacros.commands.');
+}
+
+function getDefault(string) {
+	return vscode.workspace.getConfiguration().get('terminalMacros.default.' + string);
+}
+
+function prepareCommand(commandText, terminalName, clear) {
+	commandText = commandText.replaceAll('{recent}', '\u001b[A');
+	// commandText = commandText.replaceAll('{paste}', '\26'); // Fix me in linux
+	// await commandText = commandText.replaceAll('{paste}', await vscode.env.clipboard.readText()); // Fix me in linux
+	// commandText = commandText.replaceAll('{file}', getEnvironment(uri || getOpenFileUri()).resource); // Fix me
+
+	// Fix for clearing the screen and then getting a recent command in cmd
+	if (terminalName == 'cmd' && clear && commandText == '\u001b[A') {
+		commandText = '\u001b[A\u001b[A';
+	}
+
+	return commandText;
+}
+
+function prepareTerminal(terminal, stop, logout, clear, execute, commandText) {
 	// Clear line
 	if (terminal.name == 'cmd' || terminal.name == 'powershell') {
 		terminal.sendText('\u001b', false);
@@ -43,8 +65,11 @@ function prepareTerminal(terminal, stop, logout, clear, execute, command) {
 		}
 	}
 
+	// Prepare command
+	commandText = prepareCommand(commandText, terminal.name, clear);
+
 	// Send command
-	terminal.sendText(command, execute);
+	terminal.sendText(commandText, execute);
 }
 
 // Install
@@ -52,15 +77,14 @@ function activate(context) {
 	// Implement commands here, defined in package.json
 	commands = vscode.commands.registerCommand('terminalMacros.executeCommand', () => {
 		// Get command and options
-		vscode.window.showInformationMessage();
 		group = 'General';
-		name = 'Clear';
-		command = '\u001b[A';
+		name = 'Recent';
+		commandText = '{recent}';
 		save = true;
 		stop = false;
 		logout = false;
 		clear = true;
-		execute = false;
+		execute = true;
 		focus = false; // Buggy when terminal is hidden. Terminal.show(preserveFocus: true) doesn't work
 
 		// Get terminal
@@ -70,18 +94,16 @@ function activate(context) {
 		}
 		terminal.show(!focus);
 
-		// Fix the recent command if using cmd and clearing the terminal
-		if (terminal.name == 'cmd' && clear && command == '\u001b[A') {
-			command = '\u001b[A\u001b[A';
-		}
+		// Prepare command placeholders
+		commandText = prepareCommand(commandText, terminal.name, clear);
 
 		// Save and prepare terminal
 		if (save) {
 			vscode.window.activeTextEditor.document.save().then(() => {
-				prepareTerminal(terminal, stop, logout, clear, execute, command);
+				prepareTerminal(terminal, stop, logout, clear, execute, commandText);
 			});
 		} else {
-			prepareTerminal(terminal, stop, logout, clear, execute, command);
+			prepareTerminal(terminal, stop, logout, clear, execute, commandText);
 		}
 	});
 
