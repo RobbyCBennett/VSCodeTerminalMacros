@@ -78,6 +78,7 @@ async function executeCommand() {
 	name = 'Recent';
 	commandText = '{recent}';
 	save = true;
+	show = true;
 	stop = false;
 	logout = false;
 	clear = true;
@@ -89,12 +90,16 @@ async function executeCommand() {
 	if (!terminal) {
 		terminal = vscode.window.createTerminal();
 	}
-	terminal.show(!focus);
+
+	// Show terminal
+	if (show) {
+		terminal.show(!focus);
+	}
 
 	// Prepare command placeholders
 	commandText = await prepareCommand(commandText, terminal.name, clear);
 
-	// Save and prepare terminal
+	// Save file and prepare terminal
 	if (save) {
 		vscode.window.activeTextEditor.document.save().then(() => {
 			prepareTerminal(terminal, stop, logout, clear, execute, commandText);

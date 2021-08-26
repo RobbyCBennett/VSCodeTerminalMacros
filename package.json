@@ -43,6 +43,11 @@
 					"default": true,
 					"description": "Whether to save the current file before inserting the command."
 				},
+				"terminalMacros.default.show": {
+					"type": "boolean",
+					"default": true,
+					"description": "Whether to show the terminal before inserting the command."
+				},
 				"terminalMacros.default.stop": {
 					"type": "boolean",
 					"default": false,
@@ -91,6 +96,10 @@
 								"type": "boolean",
 								"description": "Whether to save the current file before inserting the command."
 							},
+							"show": {
+								"type": "boolean",
+								"description": "Whether to show the terminal before inserting the command."
+							},
 							"stop": {
 								"type": "boolean",
 								"description": "Whether to hit ctrl-c before inserting the command."
@@ -119,6 +128,7 @@
 							"name": "Last Command",
 							"command": "{recent}",
 							"save": true,
+							"show": true,
 							"stop": false,
 							"logout": false,
 							"clear": true,
