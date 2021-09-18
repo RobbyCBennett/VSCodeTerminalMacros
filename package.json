@@ -27,14 +27,8 @@
 	"activationEvents": [
         "onCommand:terminalMacros.executeCommand"
 	],
-	"main": "./extension.js",
+	"main": "./src/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "terminalMacros.executeCommand",
-				"title": "Execute Command in Terminal"
-			}
-		],
 		"configuration": {
 			"title": "Terminal Macros",
 			"properties": {
@@ -74,10 +68,10 @@
 					"description": "Whether to focus on the terminal after inserting the command."
 				},
 				"terminalMacros.commands": {
-					"type": "array",
+					"type": "object",
 					"items": {
 						"type": [
-							"object"
+							"array"
 						],
 						"properties": {
 							"group": {

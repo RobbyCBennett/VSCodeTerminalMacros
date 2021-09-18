@@ -17,7 +17,7 @@ const path = require('path');
 //		\27			Clear line after cursor
 
 function getCommands() {
-	return vscode.workspace.getConfiguration().get('terminalMacros.commands.');
+	return vscode.workspace.getConfiguration().get('terminalMacros.commands');
 }
 
 function getDefault(string) {
@@ -72,18 +72,24 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 	terminal.sendText(commandText, execute);
 }
 
-async function executeCommand() {
+async function executeCommand(n) {
+	if (n == undefined) {
+		vscode.window.showErrorMessage('Your keyboard shortcut in keybindings.json needs the command number argument. Example: "args": 0');
+		return;
+	}
+
 	// Get command and options
-	group = 'General';
-	name = 'Recent';
-	commandText = '{recent}';
-	save = true;
-	show = false;
-	stop = false;
-	logout = false;
-	clear = true;
-	execute = true;
-	focus = false; // Buggy when terminal is hidden. Terminal.show(preserveFocus: true) doesn't work
+	command = getCommands()[n];
+	group = command.group;
+	name = command.name;
+	commandText = command.command;
+	save = command.save;
+	show = command.show;
+	stop = command.stop;
+	logout = command.logout;
+	clear = command.clear;
+	execute = command.execute;
+	focus = command.focus; // Buggy when terminal is hidden. Terminal.show(preserveFocus: true) doesn't work
 
 	// Get terminal
 	terminal = vscode.window.activeTerminal;
