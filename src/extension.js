@@ -4,17 +4,18 @@ const path = require('path');
 // vscode.window.showInformationMessage('Info');
 // vscode.window.showErrorMessage('Error');
 
-//		Useful keys:
-//		\u001b		Escape
-//		\u001b[A	Up
-//		\01			Select all
-//		\03			Stop Process
-//		\04			Logout
-//		\10			Backspace
-//		\13			Clear line before cursor
-//		\14			Clear terminal
-//		\26			Paste
-//		\27			Clear line after cursor
+codes = {
+	escape: '\u001b',
+	up: '\u001b[A',
+	selectAll: '\01',
+	stopProcess: '\03', // control c
+	logout: '\04', // control d
+	backspace: '\10',
+	clearBefore: '\13',
+	clearTerminal: '\14',
+	paste: '\26',
+	clearAfter: '\27'
+};
 
 function getCommands() {
 	return vscode.workspace.getConfiguration().get('terminalMacros.commands');
@@ -25,13 +26,13 @@ function getDefault(string) {
 }
 
 async function prepareCommand(commandText, terminalName, clear) {
-	commandText = commandText.replaceAll('{recent}', '\u001b[A');
+	commandText = commandText.replaceAll('{recent}', codes.up);
 	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
 	commandText = commandText.replaceAll('{file}', path.basename(vscode.window.activeTextEditor.document.fileName));
 
 	// Fix for clearing the screen and then getting a recent command in cmd
-	if (terminalName == 'cmd' && clear && commandText == '\u001b[A') {
-		commandText = '\u001b[A\u001b[A';
+	if (terminalName == 'cmd' && clear && commandText == codes.up) {
+		commandText = codes.up + codes.up;
 	}
 
 	return commandText;
@@ -40,19 +41,19 @@ async function prepareCommand(commandText, terminalName, clear) {
 async function prepareTerminal(terminal, stop, logout, clear, execute, commandText) {
 	// Clear line
 	if (terminal.name == 'cmd' || terminal.name == 'powershell') {
-		terminal.sendText('\u001b', false);
+		terminal.sendText(codes.escape, false);
 	} else {
-		terminal.sendText('\13\27', false);
+		terminal.sendText(codes.clearBefore + codes.clearAfter, false);
 	}
 
 	// Stop
 	if (stop) {
-		terminal.sendText('\03', false);
+		terminal.sendText(codes.stopProcess, false);
 	}
 
 	// Logout
 	if (logout) {
-		terminal.sendText('\04', false);
+		terminal.sendText(codes.logout, false);
 	}
 
 	// Clear terminal
@@ -61,7 +62,7 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 			terminal.sendText('cls');
 		}
 		else {
-			terminal.sendText('\14', false);
+			terminal.sendText(codes.clearTerminal, false);
 		}
 	}
 
