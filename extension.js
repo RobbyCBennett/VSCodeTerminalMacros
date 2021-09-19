@@ -1,9 +1,6 @@
 const vscode = require('vscode');
 const path = require('path');
 
-// vscode.window.showInformationMessage('Info');
-// vscode.window.showErrorMessage('Error');
-
 codes = {
 	escape: '\u001b',
 	up: '\u001b[A',
@@ -16,6 +13,10 @@ codes = {
 	paste: '\26',
 	clearAfter: '\27'
 };
+
+//
+// Helper Functions
+//
 
 function getCommands() {
 	return vscode.workspace.getConfiguration().get('terminalMacros.commands');
@@ -73,6 +74,10 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 	terminal.sendText(commandText, execute);
 }
 
+//
+// Extension Commands
+//
+
 async function executeCommand(n) {
 	if (n == undefined) {
 		vscode.window.showErrorMessage('Your keyboard shortcut in keybindings.json needs the command number argument. Example: "args": 0');
@@ -84,13 +89,13 @@ async function executeCommand(n) {
 	group = command.group;
 	name = command.name;
 	commandText = command.command;
-	save = command.save;
-	show = command.show;
-	stop = command.stop;
-	logout = command.logout;
-	clear = command.clear;
-	execute = command.execute;
-	focus = command.focus; // Buggy when terminal is hidden. Terminal.show(preserveFocus: true) doesn't work
+	save = command.save || getDefault('save');
+	show = command.show || getDefault('show');
+	stop = command.stop || getDefault('stop');
+	logout = command.logout || getDefault('logout');
+	clear = command.clear || getDefault('clear');
+	execute = command.execute || getDefault('execute');
+	focus = command.focus || getDefault('focus'); // Buggy when terminal is hidden. Terminal.show(preserveFocus: true) doesn't work
 
 	// Get terminal
 	terminal = vscode.window.activeTerminal;
@@ -116,14 +121,60 @@ async function executeCommand(n) {
 	}
 }
 
-async function listCommands() {
-	vscode.window.showInformationMessage('List Commands');
+async function listCommands(currentGroup = undefined) {
+	// Get all commands
+	commands = getCommands();
+
+	// Make a list of QuickPickItem objects
+	groupNames = {};
+	quickPickItems = [];
+	for (n = 0; n < commands.length; n++) {
+		command = commands[n];
+
+		// Add commands
+		if (command.group == currentGroup) {
+			quickPickItems.push({
+				// Command data
+				'isCommand': true,
+				'n': n,
+
+				// QuickPickItem data
+				'label': command.name,
+				'description': command.command
+			});
+		}
+		// Add groups
+		else if (currentGroup == undefined && ! (command.group in groupNames)) {
+			quickPickItems.push({
+				// Group data
+				'isCommand': false,
+
+				// QuickPickItem data
+				'label': command.group
+			});
+			groupNames[command.group] = true;
+		}
+	}
+
+	// Wait for the user
+	picked = await vscode.window.showQuickPick(quickPickItems);
+
+	if (picked) {
+		// Execute the command
+		if (picked.isCommand) {
+			executeCommand(picked.n);
+		}
+		// Recursively display the groups
+		else {
+			listCommands(picked.label);
+		}
+	}
 }
 
 // Install
 function activate(context) {
 	// Implement activationEvents here, defined in package.json
-	// activationEvents can have keyboard shortcuts, and commands show up in the  command palette
+	// activationEvents can have keyboard shortcuts, and commands show up in the command palette
 	context.subscriptions.push(vscode.commands.registerCommand('terminalMacros.executeCommand', executeCommand));
 	context.subscriptions.push(vscode.commands.registerCommand('terminalMacros.listCommands', listCommands));
 }
