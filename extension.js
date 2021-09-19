@@ -116,12 +116,16 @@ async function executeCommand(n) {
 	}
 }
 
+async function listCommands() {
+	vscode.window.showInformationMessage('List Commands');
+}
+
 // Install
 function activate(context) {
-	// Implement commands here, defined in package.json
-	commands = vscode.commands.registerCommand('terminalMacros.executeCommand', executeCommand);
-
-	context.subscriptions.push(commands);
+	// Implement activationEvents here, defined in package.json
+	// activationEvents can have keyboard shortcuts, and commands show up in the  command palette
+	context.subscriptions.push(vscode.commands.registerCommand('terminalMacros.executeCommand', executeCommand));
+	context.subscriptions.push(vscode.commands.registerCommand('terminalMacros.listCommands', listCommands));
 }
 
 // Uninstall

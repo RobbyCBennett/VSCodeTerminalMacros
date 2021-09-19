@@ -25,10 +25,17 @@
 	],
 	"icon": "icon.png",
 	"activationEvents": [
-        "onCommand:terminalMacros.executeCommand"
+        "onCommand:terminalMacros.executeCommand",
+        "onCommand:terminalMacros.listCommands"
 	],
-	"main": "./src/extension.js",
+	"main": "./extension.js",
 	"contributes": {
+		"commands": [
+			{
+				"command": "terminalMacros.listCommands",
+				"title": "Terminal Macros: List Commands"
+			}
+		],
 		"configuration": {
 			"title": "Terminal Macros",
 			"properties": {
