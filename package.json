@@ -162,10 +162,6 @@
 							"name": "Make Run",
 							"command": "make run",
 							"focus": true
-						},
-						{
-							"name": "morning",
-							"command": "echo Good morning!"
 						}
 					]
 				}

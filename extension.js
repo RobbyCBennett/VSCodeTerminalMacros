@@ -79,13 +79,23 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 //
 
 async function executeCommand(n) {
-	if (n == undefined) {
-		vscode.window.showErrorMessage('Your keyboard shortcut in keybindings.json needs the command number argument. Example: "args": 0');
+	commands = getCommands();
+	
+	if (commands.length == 0) {
+		vscode.window.showInformationMessage('There are no commands in settings.json. Look at the extension for some examples.');
+		return;
+	}
+	else if (isNaN(n)) {
+		vscode.window.showErrorMessage('Invalid command number "' + n + '" in keybindings.json. A valid example is "args": 0');
+		return;
+	}
+	else if (n < 0 || n >= commands.length) {
+		vscode.window.showErrorMessage('Invalid command number "' + n + '" in keybindings.json. With ' + (commands.length).toString() + ' commands, it should be between 0 - ' + (commands.length - 1).toString() + ' inclusive.');
 		return;
 	}
 
 	// Get command and options
-	command = getCommands()[n];
+	command = commands[n];
 	group = command.group;
 	name = command.name;
 	commandText = command.command;
@@ -96,6 +106,12 @@ async function executeCommand(n) {
 	clear = command.clear || getDefault('clear');
 	execute = command.execute || getDefault('execute');
 	focus = command.focus || getDefault('focus'); // Buggy when terminal is hidden. Terminal.show(preserveFocus: true) doesn't work
+
+	if (commandText == undefined) {
+		vscode.window.showErrorMessage('Missing the "command" key and value in settings.json. A valid example is "command": "make"');
+		console.log(command);
+		return;
+	}
 
 	// Get terminal
 	terminal = vscode.window.activeTerminal;
@@ -139,8 +155,8 @@ async function listCommands(currentGroup = undefined) {
 				'n': n,
 
 				// QuickPickItem data
-				'label': command.name,
-				'description': command.command
+				'label': command.name || command.command,
+				'description': (command.name == undefined) ? '': command.command
 			});
 		}
 		// Add groups
@@ -171,7 +187,10 @@ async function listCommands(currentGroup = undefined) {
 	}
 }
 
-// Install
+//
+// Basic Extension Functions
+//
+
 function activate(context) {
 	// Implement activationEvents here, defined in package.json
 	// activationEvents can have keyboard shortcuts, and commands show up in the command palette
@@ -179,7 +198,6 @@ function activate(context) {
 	context.subscriptions.push(vscode.commands.registerCommand('terminalMacros.listCommands', listCommands));
 }
 
-// Uninstall
 function deactivate() {}
 
 module.exports = {
