@@ -89,3 +89,7 @@ See all your commands in the quick pick menu.
 	"command": "terminalMacros.listCommands"
 },
 ```
+
+## Known Issues
+
+ - The terminal always focuses when using `terminal.show()`. [This is a vscode bug](https://github.com/microsoft/vscode/issues/131340).
