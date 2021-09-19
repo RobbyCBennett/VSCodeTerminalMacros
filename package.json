@@ -125,43 +125,32 @@
 					},
 					"default": [
 						{
-							"group": "General",
-							"name": "Last Command",
-							"command": "{recent}",
-							"save": true,
-							"show": true,
-							"stop": false,
-							"logout": false,
-							"clear": true,
-							"execute": true,
-							"focus": false
+							"command": "echo Hello world"
+						},
+						{	
+							// Required
+							"command": "{recent}", // {recent} gets the last command
+					
+							// Optional
+							"group": "General", // Used for organization
+							"name": "Last Command", // The pretty name
+							"save": true, // Saves your file
+							"show": true, // Shows the terminal
+							"stop": false, // Control c
+							"logout": false, // Control d
+							"clear": true, // Clear
+							"execute": true, // Execute the command
+							"focus": false // Focus on the terminal
 						},
 						{
 							"group": "General",
 							"name": "Run File",
-							"command": "./{file}"
+							"command": "./{file}" // {file} gets the current file in the editor
 						},
 						{
 							"group": "General",
 							"name": "Paste",
-							"command": "{paste}"
-						},
-						{
-							"group": "JavaScript",
-							"name": "Node",
-							"command": "npm start",
-							"stop": true
-						},
-						{
-							"group": "C/C++",
-							"name": "Make",
-							"command": "make"
-						},
-						{
-							"group": "C/C++",
-							"name": "Make Run",
-							"command": "make run",
-							"focus": true
+							"command": "{paste}" // {paste} gets the last thing copied
 						}
 					]
 				}

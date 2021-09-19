@@ -1,36 +1,91 @@
-# terminal-macros README
+# Terminal Macros
 
-Do anything with the terminal without needing to touch the terminal.
+*Use the terminal without using the terminal.*
 
-## Features
+## Add Your Commands
 
-Send commands to the terminal, and choose whether to focus or not.
+Add and organize all of your commands.
 
-Automatically save your file when sending a command to the terminal.
+ - settings.json
 
-Send the last used command to the terminal.
+```json
+"terminalMacros.commands": [
+	{
+		"command": "echo Hello world"
+	},
+	{	
+		// Required
+		"command": "{recent}", // {recent} gets the last command
 
-Assign yoour most frequently used commands to hotkeys.
+		// Optional
+		"group": "General", // Used for organization
+		"name": "Last Command", // The pretty name
+		"save": true, // Saves your file
+		"show": true, // Shows the terminal
+		"stop": false, // Control c
+		"logout": false, // Control d
+		"clear": true, // Clear the terminal
+		"execute": true, // Execute the command
+		"focus": false // Focus on the terminal
+	},
+	{
+		"group": "General",
+		"name": "Run File",
+		"command": "./{file}" // {file} gets the current file in the editor
+	},
+	{
+		"group": "General",
+		"name": "Paste",
+		"command": "{paste}" // {paste} gets the last thing copied
+	}
+],
+```
 
-Save an infinite amount of commands, in groups if you want to.
+## Edit Default Command Options
 
-## Extension Settings
+Useful if you always want to clear the terminal, save your file, etc.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+ - Settings
 
-For example:
+ - settings.json
 
-This extension contributes the following settings:
+```json
+"terminalMacros.default.clear": true,
+"terminalMacros.default.execute": true,
+"terminalMacros.default.focus": false,
+"terminalMacros.default.logout": false,
+"terminalMacros.default.save": true,
+"terminalMacros.default.show": true,
+"terminalMacros.default.stop": false,
+```
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+## Execute a Command with Keyboard Shortcut
 
-## Known Issues
+Save your most frequent commands to keyboard shortcuts.
 
-None
+ - keybindings.json
 
-## Release Notes
+```json
+{
+	"key": "f1",
+	"command": "terminalMacros.executeCommand",
+	"args": 0 // Required: command number, a 0-based index in the array
+},
+```
 
-### 1.0.0
+## List All Commands in Quick Pick Menu
 
-First
+See all your commands in the quick pick menu.
+
+ - Command Pallete: "Terminal Macros: List Commands"
+
+ - Keyboard Shortcuts
+
+ - keybindings.json
+
+```json
+{
+	"key": "f2",
+	"command": "terminalMacros.listCommands"
+},
+```
