@@ -59,9 +59,9 @@ Useful if you always want to clear the terminal, save your file, etc.
 "terminalMacros.default.stop": false,
 ```
 
-## Execute a Command with Keyboard Shortcut
+## Execute a Command with Keyboard Shortcuts
 
-Save your most frequent commands to keyboard shortcuts.
+Use your most frequent commands with keyboard shortcuts.
 
  - keybindings.json
 
