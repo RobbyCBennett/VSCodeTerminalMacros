@@ -3,7 +3,7 @@
 	"displayName": "Terminal Macros",
 	"description": "Do anything with the terminal without needing to touch the terminal.",
 	"version": "1.0.0",
-	"publisher": "RobbyCBennett",
+	"publisher": "rob-bennett",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/RobbyCBennett/VSCodeTerminalMacros.git"
