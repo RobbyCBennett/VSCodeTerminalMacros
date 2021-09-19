@@ -1,7 +1,8 @@
 # Change Log
 
 ## [1.0.2] - 19 Sep 2021
-- Wording and typos in readme
+- Updated tagline
+- Added Makefile
 
 ## [1.0.1] - 19 Sep 2021
 - Wording and typos in readme
