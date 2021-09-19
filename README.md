@@ -8,7 +8,7 @@ Add and organize all of your commands.
 
  - settings.json
 
-```json
+```jsonc
 "terminalMacros.commands": [
 	{
 		"command": "echo Hello world"
@@ -49,7 +49,7 @@ Useful if you always want to clear the terminal, save your file, etc.
 
  - settings.json
 
-```json
+```jsonc
 "terminalMacros.default.clear": true,
 "terminalMacros.default.execute": true,
 "terminalMacros.default.focus": false,
@@ -65,7 +65,7 @@ Save your most frequent commands to keyboard shortcuts.
 
  - keybindings.json
 
-```json
+```jsonc
 {
 	"key": "f1",
 	"command": "terminalMacros.executeCommand",
@@ -83,7 +83,7 @@ See all your commands in the quick pick menu.
 
  - keybindings.json
 
-```json
+```jsonc
 {
 	"key": "f2",
 	"command": "terminalMacros.listCommands"
