@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.3] - 29 Sep 2021
+- Fixed settings.json bug with terminalMacros.commands
+
 ## [1.0.2] - 19 Sep 2021
 - Updated tagline
 - Added Makefile

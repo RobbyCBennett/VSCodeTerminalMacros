@@ -2,7 +2,7 @@
 	"name": "terminal-macros",
 	"displayName": "Terminal Macros",
 	"description": "Use the terminal without using the terminal.",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"publisher": "rob-bennett",
 	"repository": {
 		"type": "git",
@@ -75,10 +75,10 @@
 					"description": "Whether to focus on the terminal after inserting the command."
 				},
 				"terminalMacros.commands": {
-					"type": "object",
+					"type": "array",
 					"items": {
 						"type": [
-							"array"
+							"object"
 						],
 						"properties": {
 							"group": {
