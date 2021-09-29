@@ -93,3 +93,7 @@ See all your commands in the quick pick menu.
 ## Known Issues
 
  - The terminal always focuses when using `terminal.show()`. [This is a vscode bug](https://github.com/microsoft/vscode/issues/131340).
+
+ - terminalMacros.commands is supposed to be an array, but somewhere it's set as an object
+ 
+ - Make it work in the SSH extension
