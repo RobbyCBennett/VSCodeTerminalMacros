@@ -26,6 +26,10 @@ function getDefault(string) {
 	return vscode.workspace.getConfiguration().get('terminalMacros.default.' + string);
 }
 
+String.prototype.replaceAll = function (oldSubstring, newSubstring) {
+	return this.replace(new RegExp(oldSubstring, 'g'), newSubstring);
+};
+
 async function prepareCommand(commandText, terminalName, clear) {
 	commandText = commandText.replaceAll('{recent}', codes.up);
 	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());

@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.4] - 29 Sep 2021
+- Fixed issue with ms-vscode-remote.remote-ssh
+
 ## [1.0.3] - 29 Sep 2021
 - Fixed settings.json bug with terminalMacros.commands
 

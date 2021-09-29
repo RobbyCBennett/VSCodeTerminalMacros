@@ -94,4 +94,3 @@ See all your commands in the quick pick menu.
 
  - The terminal always focuses when using `terminal.show()`. [This is a vscode bug](https://github.com/microsoft/vscode/issues/131340).
  
- - Doesn't work in the SSH extension
