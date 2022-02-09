@@ -13,7 +13,7 @@ Add and organize all of your commands.
 	{
 		"command": "echo Hello world"
 	},
-	{	
+	{
 		// Required
 		"command": "{recent}", // {recent} gets the last command
 
@@ -89,8 +89,3 @@ See all your commands in the quick pick menu.
 	"command": "terminalMacros.listCommands"
 },
 ```
-
-## Known Issues
-
- - The terminal always focuses when using `terminal.show()`. [This is fixed in the insiders release.](https://github.com/microsoft/vscode/issues/128289).
- 

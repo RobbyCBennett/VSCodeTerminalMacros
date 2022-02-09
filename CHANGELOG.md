@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.5] - 8 Feb 2022
+- VSCode fixed inability to open terminal without focus
+
 ## [1.0.4] - 29 Sep 2021
 - Fixed issue with ms-vscode-remote.remote-ssh
 

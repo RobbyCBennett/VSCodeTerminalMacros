@@ -1,8 +1,8 @@
-{	
+{
 	"name": "terminal-macros",
 	"displayName": "Terminal Macros",
 	"description": "Use the terminal without using the terminal.",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"publisher": "rob-bennett",
 	"repository": {
 		"type": "git",
@@ -128,9 +128,9 @@
 						{
 							"command": "echo Hello world"
 						},
-						{	
+						{
 							"command": "{recent}",
-					
+
 							"group": "General",
 							"name": "Last Command",
 							"save": true,
