@@ -1,7 +1,7 @@
 {
 	"name": "terminal-macros",
 	"displayName": "Terminal Macros",
-	"description": "Use the terminal without using the terminal.",
+	"description": "Use the terminal without using the terminal",
 	"version": "1.0.8",
 	"publisher": "rob-bennett",
 	"repository": {
