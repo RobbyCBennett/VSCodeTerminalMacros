@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.8] - 2022 Dec 2
+- Changed icon
+- Fixed typos in README.md
+
 ## [1.0.7] - 2022 Dec 2
 - Fixed issue with options per command
 
@@ -23,7 +27,7 @@
 - Added Makefile
 
 ## [1.0.1] - 2021 Sep 19
-- Wording and typos in readme
+- Fixed wording and typos in README.md
 
 ## [1.0.0] - 2021 Sep 19
 - Initial release
