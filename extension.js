@@ -1,7 +1,7 @@
 const vscode = require('vscode');
 const path = require('path');
 
-codes = {
+const CODES = {
 	escape: '\u001b',
 	up: '\u001b[A',
 	selectAll: '\01',
@@ -33,7 +33,7 @@ String.prototype.replaceAll = function (oldSubstring, newSubstring) {
 async function prepareCommand(commandText, terminalName, clear) {
 	// Replace keywords
 	const editor = vscode.window.activeTextEditor;
-	commandText = commandText.replaceAll('{recent}', codes.up);
+	commandText = commandText.replaceAll('{recent}', CODES.up);
 	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
 	if (editor) {
 		const document = editor.document;
@@ -44,8 +44,8 @@ async function prepareCommand(commandText, terminalName, clear) {
 	}
 
 	// Fix for clearing the screen and then getting a recent command in cmd
-	if (terminalName == 'cmd' && clear && commandText == codes.up) {
-		commandText = codes.up + codes.up;
+	if (terminalName == 'cmd' && clear && commandText == CODES.up) {
+		commandText = CODES.up + CODES.up;
 	}
 
 	return commandText;
@@ -54,19 +54,19 @@ async function prepareCommand(commandText, terminalName, clear) {
 async function prepareTerminal(terminal, stop, logout, clear, execute, commandText) {
 	// Clear line
 	if (terminal.name == 'cmd' || terminal.name == 'powershell') {
-		terminal.sendText(codes.escape, false);
+		terminal.sendText(CODES.escape, false);
 	} else {
-		terminal.sendText(codes.clearBefore + codes.clearAfter, false);
+		terminal.sendText(CODES.clearBefore + CODES.clearAfter, false);
 	}
 
 	// Stop
 	if (stop) {
-		terminal.sendText(codes.stopProcess);
+		terminal.sendText(CODES.stopProcess);
 	}
 
 	// Logout
 	if (logout) {
-		terminal.sendText(codes.logout);
+		terminal.sendText(CODES.logout);
 	}
 
 	// Clear terminal
@@ -75,7 +75,7 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 			terminal.sendText('cls');
 		}
 		else {
-			terminal.sendText(codes.clearTerminal, false);
+			terminal.sendText(CODES.clearTerminal, false);
 		}
 	}
 
@@ -107,17 +107,17 @@ async function executeCommand(n) {
 	}
 
 	// Get command and options
-	command = commands[n];
-	group = command.group;
-	name = command.name;
-	commandText = command.command;
-	save = command.save || getDefault('save');
-	show = command.show || getDefault('show');
-	stop = command.stop || getDefault('stop');
-	logout = command.logout || getDefault('logout');
-	clear = command.clear || getDefault('clear');
-	execute = command.execute || getDefault('execute');
-	focus = command.focus || getDefault('focus'); // Buggy when terminal is hidden. Terminal.show(preserveFocus: true) doesn't work
+	const command = commands[n];
+	const group = command.group;
+	const name = command.name;
+	let commandText = command.command;
+	const save = command.save || getDefault('save');
+	const show = command.show || getDefault('show');
+	const stop = command.stop || getDefault('stop');
+	const logout = command.logout || getDefault('logout');
+	const clear = command.clear || getDefault('clear');
+	const execute = command.execute || getDefault('execute');
+	const focus = command.focus || getDefault('focus');
 
 	if (commandText == undefined) {
 		vscode.window.showErrorMessage('Missing the "command" key and value in settings.json. A valid example is "command": "make"');
@@ -126,7 +126,7 @@ async function executeCommand(n) {
 	}
 
 	// Get terminal
-	terminal = vscode.window.activeTerminal;
+	const terminal = vscode.window.activeTerminal;
 	if (!terminal) {
 		terminal = vscode.window.createTerminal();
 	}
@@ -151,13 +151,13 @@ async function executeCommand(n) {
 
 async function listCommands(currentGroup = undefined) {
 	// Get all commands
-	commands = getCommands();
+	const commands = getCommands();
 
 	// Make a list of QuickPickItem objects
-	groupNames = {};
-	quickPickItems = [];
-	for (n = 0; n < commands.length; n++) {
-		command = commands[n];
+	const groupNames = {};
+	const quickPickItems = [];
+	for (let n = 0; n < commands.length; n++) {
+		const command = commands[n];
 
 		// Add commands
 		if (command.group == currentGroup) {
@@ -185,7 +185,7 @@ async function listCommands(currentGroup = undefined) {
 	}
 
 	// Wait for the user
-	picked = await vscode.window.showQuickPick(quickPickItems);
+	const picked = await vscode.window.showQuickPick(quickPickItems);
 
 	if (picked) {
 		// Execute the command
