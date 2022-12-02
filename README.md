@@ -1,6 +1,6 @@
 # Terminal Macros
 
-*Use the terminal without using the terminal.*
+*Use the terminal without using the terminal*
 
 ## Add Your Commands
 
@@ -89,7 +89,7 @@ Use your most frequent commands with keyboard shortcuts.
 
 See all your commands in the quick pick menu.
 
- - Command Pallete: "Terminal Macros: List Commands"
+ - Command Palette: "Terminal Macros: List Commands"
 
  - Keyboard Shortcuts
 
