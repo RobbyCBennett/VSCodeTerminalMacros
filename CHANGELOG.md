@@ -1,21 +1,23 @@
 # Change Log
 
-## [1.0.5] - 8 Feb 2022
+## [1.0.6] - 2022 Dec 1
+- Added {path} to get the full path of the current file
+
+## [1.0.5] - 2022 Feb 8
 - VSCode fixed inability to open terminal without focus
 
-## [1.0.4] - 29 Sep 2021
+## [1.0.4] - 2021 Sep 29
 - Fixed issue with ms-vscode-remote.remote-ssh
 
-## [1.0.3] - 29 Sep 2021
+## [1.0.3] - 2021 Sep 29
 - Fixed settings.json bug with terminalMacros.commands
 
-## [1.0.2] - 19 Sep 2021
+## [1.0.2] - 2021 Sep 19
 - Updated tagline
 - Added Makefile
 
-## [1.0.1] - 19 Sep 2021
+## [1.0.1] - 2021 Sep 19
 - Wording and typos in readme
 
-## [1.0.0] - 19 Sep 2021
-
+## [1.0.0] - 2021 Sep 19
 - Initial release

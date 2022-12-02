@@ -34,6 +34,7 @@ async function prepareCommand(commandText, terminalName, clear) {
 	commandText = commandText.replaceAll('{recent}', codes.up);
 	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
 	commandText = commandText.replaceAll('{file}', path.basename(vscode.window.activeTextEditor.document.fileName));
+	commandText = commandText.replaceAll('{path}', vscode.window.activeTextEditor.document.fileName);
 
 	// Fix for clearing the screen and then getting a recent command in cmd
 	if (terminalName == 'cmd' && clear && commandText == codes.up) {
@@ -84,7 +85,7 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 
 async function executeCommand(n) {
 	commands = getCommands();
-	
+
 	if (commands.length == 0) {
 		vscode.window.showInformationMessage('There are no commands in settings.json. Look at the extension for some examples.');
 		return;
