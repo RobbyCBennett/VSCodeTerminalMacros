@@ -74,6 +74,11 @@
 					"default": false,
 					"description": "Whether to focus on the terminal after inserting the command."
 				},
+				"terminalMacros.default.terminal": {
+					"type": "string",
+					"default": "",
+					"description": "Name of terminal to use"
+				},
 				"terminalMacros.commands": {
 					"type": "array",
 					"description": "A list of your favorite commands.",
@@ -139,7 +144,8 @@
 							"logout": false,
 							"clear": true,
 							"execute": true,
-							"focus": false
+							"focus": false,
+							"terminal": "bash"
 						},
 						{
 							"group": "General",

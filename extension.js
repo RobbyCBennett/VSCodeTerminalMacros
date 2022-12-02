@@ -118,6 +118,7 @@ async function executeCommand(n) {
 	const clear = command.clear || getDefault('clear');
 	const execute = command.execute || getDefault('execute');
 	const focus = command.focus || getDefault('focus');
+	const terminalName = command.terminal || getDefault('terminal');
 
 	if (commandText == undefined) {
 		vscode.window.showErrorMessage('Missing the "command" key and value in settings.json. A valid example is "command": "make"');
@@ -126,9 +127,27 @@ async function executeCommand(n) {
 	}
 
 	// Get terminal
-	let terminal = vscode.window.activeTerminal;
-	if (!terminal) {
-		terminal = vscode.window.createTerminal();
+	let terminal;
+	// Get specific terminal
+	if (terminalName) {
+		for (t of vscode.window.terminals) {
+			if (t.name == terminalName) {
+				terminal = t;
+				break;
+			}
+		}
+
+		if (! terminal) {
+			terminal = vscode.window.createTerminal({ name: terminalName });
+		}
+	}
+	// Get any terminal
+	else {
+		terminal = vscode.window.activeTerminal;
+
+		if (! terminal) {
+			terminal = vscode.window.createTerminal();
+		}
 	}
 
 	// Show terminal

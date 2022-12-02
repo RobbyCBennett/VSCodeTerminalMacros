@@ -26,7 +26,8 @@ Add and organize all of your commands.
 		"logout": false, // Control d
 		"clear": true, // Clear the terminal
 		"execute": true, // Execute the command
-		"focus": false // Focus on the terminal
+		"focus": false, // Focus on the terminal
+		"terminal": "bash" // Name of terminal to use
 	},
 	{
 		"group": "General",
