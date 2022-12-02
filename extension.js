@@ -126,7 +126,7 @@ async function executeCommand(n) {
 	}
 
 	// Get terminal
-	const terminal = vscode.window.activeTerminal;
+	let terminal = vscode.window.activeTerminal;
 	if (!terminal) {
 		terminal = vscode.window.createTerminal();
 	}
