@@ -111,13 +111,13 @@ async function executeCommand(n) {
 	const group = command.group;
 	const name = command.name;
 	let commandText = command.command;
-	const save = command.save || getDefault('save');
-	const show = command.show || getDefault('show');
-	const stop = command.stop || getDefault('stop');
-	const logout = command.logout || getDefault('logout');
-	const clear = command.clear || getDefault('clear');
-	const execute = command.execute || getDefault('execute');
-	const focus = command.focus || getDefault('focus');
+	const save = (command.save != undefined) ? command.save : getDefault('save');
+	const show = (command.show != undefined) ? command.show : getDefault('show');
+	const stop = (command.stop != undefined) ? command.stop : getDefault('stop');
+	const logout = (command.logout != undefined) ? command.logout : getDefault('logout');
+	const clear = (command.clear != undefined) ? command.clear : getDefault('clear');
+	const execute = (command.execute != undefined) ? command.execute : getDefault('execute');
+	const focus = (command.focus != undefined) ? command.focus : getDefault('focus');
 	const terminalName = command.terminal || getDefault('terminal');
 
 	if (commandText == undefined) {

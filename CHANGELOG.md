@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.7] - 2022 Dec 2
+- Fixed issue with options per command
+
 ## [1.0.6] - 2022 Dec 1
 - Added {path} to command string to get the full path of the current file
 - Added {selection} to command string to get the selected text
