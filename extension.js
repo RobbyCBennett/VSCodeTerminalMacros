@@ -31,10 +31,17 @@ String.prototype.replaceAll = function (oldSubstring, newSubstring) {
 };
 
 async function prepareCommand(commandText, terminalName, clear) {
+	// Replace keywords
+	const editor = vscode.window.activeTextEditor;
 	commandText = commandText.replaceAll('{recent}', codes.up);
 	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
-	commandText = commandText.replaceAll('{file}', path.basename(vscode.window.activeTextEditor.document.fileName));
-	commandText = commandText.replaceAll('{path}', vscode.window.activeTextEditor.document.fileName);
+	if (editor) {
+		const document = editor.document;
+		const fileName = document.fileName;
+		commandText = commandText.replaceAll('{file}', path.basename(fileName));
+		commandText = commandText.replaceAll('{path}', fileName);
+		commandText = commandText.replaceAll('{selection}', document.getText(editor.selection));
+	}
 
 	// Fix for clearing the screen and then getting a recent command in cmd
 	if (terminalName == 'cmd' && clear && commandText == codes.up) {
@@ -133,7 +140,7 @@ async function executeCommand(n) {
 	commandText = await prepareCommand(commandText, terminal.name, clear);
 
 	// Save file and prepare terminal
-	if (save) {
+	if (save && vscode.window.activeTextEditor) {
 		vscode.window.activeTextEditor.document.save().then(() => {
 			prepareTerminal(terminal, stop, logout, clear, execute, commandText);
 		});

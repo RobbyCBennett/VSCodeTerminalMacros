@@ -15,7 +15,7 @@ Add and organize all of your commands.
 	},
 	{
 		// Required
-		"command": "{recent}", // {recent} gets the command that was run most recently
+		"command": "{recent}", // {recent} = the command that was run most recently
 
 		// Optional
 		"group": "General", // Used for organization
@@ -31,17 +31,23 @@ Add and organize all of your commands.
 	{
 		"group": "General",
 		"name": "Run File",
-		"command": "./{file}" // {file} gets the name of the current file in the editor
+		"command": "./{file}" // {file} = name of the current file in the editor
 	},
 	{
 		"group": "General",
 		"name": "Paste",
-		"command": "{paste}" // {paste} gets the last thing copied
+		"command": "{paste}" // {paste} = the last thing copied
 	},
 	{
 		"group": "General",
 		"name": "Full Path",
-		"command": "echo {path}" // {path} gets the full path of the current file in the editor
+		"command": "echo {path}" // {path} = full path of the current file in the editor
+	},
+	{
+		"group": "General",
+		"name": "Execute Selected",
+		"command": "{selection}", // {selection} = selected text in the editor
+		"execute": true
 	},
 ],
 ```

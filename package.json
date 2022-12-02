@@ -155,6 +155,12 @@
 							"group": "General",
 							"name": "Full Path",
 							"command": "echo {path}"
+						},
+						{
+							"group": "General",
+							"name": "Execute Selected",
+							"command": "{selection}",
+							"execute": true
 						}
 					]
 				}

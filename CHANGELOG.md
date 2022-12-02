@@ -2,6 +2,7 @@
 
 ## [1.0.6] - 2022 Dec 1
 - Added {path} to get the full path of the current file
+- Added {selection} to get the selected text
 - Fixed issue with command being cut off with WSL, stop/logout, and clear
 
 ## [1.0.5] - 2022 Feb 8
