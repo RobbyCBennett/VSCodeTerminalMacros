@@ -54,12 +54,12 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 
 	// Stop
 	if (stop) {
-		terminal.sendText(codes.stopProcess, false);
+		terminal.sendText(codes.stopProcess);
 	}
 
 	// Logout
 	if (logout) {
-		terminal.sendText(codes.logout, false);
+		terminal.sendText(codes.logout);
 	}
 
 	// Clear terminal

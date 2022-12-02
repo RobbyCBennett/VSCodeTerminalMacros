@@ -150,6 +150,11 @@
 							"group": "General",
 							"name": "Paste",
 							"command": "{paste}"
+						},
+						{
+							"group": "General",
+							"name": "Full Path",
+							"command": "echo {path}"
 						}
 					]
 				}
