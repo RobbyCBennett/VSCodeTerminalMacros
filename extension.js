@@ -18,6 +18,10 @@ const CODES = {
 // Helper Functions
 //
 
+function windowsToWslPath(fileName) {
+	return fileName.split(path.sep).join(path.posix.sep).replace(/^([a-zA-Z]):/, '/mnt/$1');
+}
+
 function getCommands() {
 	return vscode.workspace.getConfiguration().get('terminalMacros.commands');
 }
@@ -37,7 +41,8 @@ async function prepareCommand(commandText, terminalName, clear) {
 	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
 	if (editor) {
 		const document = editor.document;
-		const fileName = document.fileName;
+		const fileName = (terminalName != 'wsl') ? document.fileName : windowsToWslPath(document.fileName);
+		commandText = commandText.replaceAll('{directory}', path.dirname(fileName));
 		commandText = commandText.replaceAll('{file}', path.basename(fileName));
 		commandText = commandText.replaceAll('{path}', fileName);
 		commandText = commandText.replaceAll('{selection}', document.getText(editor.selection));

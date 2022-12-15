@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.9] - 2022 Dec 14
+- Added {directory} to command string to get the full path of the current directory
+- Fixed issue with paths for WSL
+
 ## [1.0.8] - 2022 Dec 2
 - Changed icon
 - Fixed typos in README.md

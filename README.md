@@ -50,6 +50,12 @@ Add and organize all of your commands.
 		"command": "{selection}", // {selection} = selected text in the editor
 		"execute": true
 	},
+	{
+		"group": "General",
+		"name": "Change Directory",
+		"command": "cd {directory}", // {directory} = full path of the directory of the file in the editor
+		"execute": true
+	}
 ],
 ```
 
