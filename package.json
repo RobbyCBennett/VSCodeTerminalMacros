@@ -52,12 +52,12 @@
 				"terminalMacros.default.stop": {
 					"type": "boolean",
 					"default": false,
-					"description": "Whether to hit ctrl-d before inserting the command."
+					"description": "Whether to hit ctrl-c before inserting the command."
 				},
 				"terminalMacros.default.logout": {
 					"type": "boolean",
 					"default": false,
-					"description": "Whether to hit ctrl-c before inserting the command."
+					"description": "Whether to hit ctrl-d before inserting the command."
 				},
 				"terminalMacros.default.clear": {
 					"type": "boolean",

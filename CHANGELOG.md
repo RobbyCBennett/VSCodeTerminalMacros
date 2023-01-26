@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.10] - 2023 Jan 26
+- Fixed descriptions of stop & logout in settings
+
 ## [1.0.9] - 2022 Dec 14
 - Added {directory} to command string to get the full path of the current directory
 - Fixed issue with paths for WSL
