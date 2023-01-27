@@ -1,17 +1,16 @@
 const vscode = require('vscode');
-const path = require('path');
+
+const path = require('node:path');
 
 const CODES = {
-	escape: '\u001b',
-	up: '\u001b[A',
-	selectAll: '\01',
-	stopProcess: '\03', // control c
-	logout: '\04', // control d
-	backspace: '\10',
-	clearBefore: '\13',
+	escape:        '\u001b',
+	up:            '\u001b[A',
+	stopProcess:   '\03', // control c
+	logout:        '\04', // control d
+	clearBefore:   '\13',
 	clearTerminal: '\14',
-	paste: '\26',
-	clearAfter: '\27'
+	paste:         '\26',
+	clearAfter:    '\27',
 };
 
 //
@@ -30,15 +29,22 @@ function getDefault(string) {
 	return vscode.workspace.getConfiguration().get('terminalMacros.default.' + string);
 }
 
+function error(message) {
+	vscode.window.showErrorMessage(`Terminal Macros: ${message}`);
+}
+
 String.prototype.replaceAll = function (oldSubstring, newSubstring) {
 	return this.replace(new RegExp(oldSubstring, 'g'), newSubstring);
 };
 
-async function prepareCommand(commandText, terminalName, clear) {
-	// Replace keywords
+async function formatCommand(commandText, terminalName, clear) {
+	// Replace general keywords
 	const editor = vscode.window.activeTextEditor;
 	commandText = commandText.replaceAll('{recent}', CODES.up);
-	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
+	if (/{paste}/.test(commandText))
+		commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
+
+	// Replace editor keywords
 	if (editor) {
 		const document = editor.document;
 		const fileName = (terminalName != 'wsl') ? document.fileName : windowsToWslPath(document.fileName);
@@ -49,46 +55,34 @@ async function prepareCommand(commandText, terminalName, clear) {
 	}
 
 	// Fix for clearing the screen and then getting a recent command in cmd
-	if (terminalName == 'cmd' && clear && commandText == CODES.up) {
+	if (terminalName == 'cmd' && clear && commandText == CODES.up)
 		commandText = CODES.up + CODES.up;
-	}
 
 	return commandText;
 }
 
 async function prepareTerminal(terminal, stop, logout, clear, execute, commandText) {
 	// Clear line
-	if (terminal.name == 'cmd' || terminal.name == 'powershell') {
+	if (terminal.name == 'cmd' || terminal.name == 'powershell')
 		terminal.sendText(CODES.escape, false);
-	} else {
+	else
 		terminal.sendText(CODES.clearBefore + CODES.clearAfter, false);
-	}
 
-	// Stop
-	if (stop) {
+	// Stop process
+	if (stop)
 		terminal.sendText(CODES.stopProcess);
-	}
 
-	// Logout
-	if (logout) {
+	// Log out of session
+	if (logout)
 		terminal.sendText(CODES.logout);
-	}
 
 	// Clear terminal
 	if (clear) {
-		if (terminal.name == 'cmd') {
+		if (terminal.name == 'cmd')
 			terminal.sendText('cls');
-		}
-		else {
+		else
 			terminal.sendText(CODES.clearTerminal, false);
-		}
 	}
-
-	// Prepare command
-	commandText = await prepareCommand(commandText, terminal.name, clear);
-
-	// Send command
-	terminal.sendText(commandText, execute);
 }
 
 //
@@ -96,26 +90,25 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 //
 
 async function executeCommand(n) {
-	commands = getCommands();
+	const commands = getCommands();
+	const len = commands.length;
 
-	if (commands.length == 0) {
-		vscode.window.showInformationMessage('There are no commands in settings.json. Look at the extension for some examples.');
-		return;
-	}
-	else if (isNaN(n)) {
-		vscode.window.showErrorMessage('Invalid command number "' + n + '" in keybindings.json. A valid example is "args": 0');
-		return;
-	}
-	else if (n < 0 || n >= commands.length) {
-		vscode.window.showErrorMessage('Invalid command number "' + n + '" in keybindings.json. With ' + (commands.length).toString() + ' commands, it should be between 0 - ' + (commands.length - 1).toString() + ' inclusive.');
-		return;
-	}
+	if (len == 0)
+		return error('settings.json: No commands');
+	else if (isNaN(n) || n < 0 || n >= len)
+		return error(`keybindings.json: "args": ${n} not command number in range 0 - ${len-1} inclusive`);
 
-	// Get command and options
+	// Get command
 	const command = commands[n];
 	const group = command.group;
 	const name = command.name;
 	let commandText = command.command;
+
+	// Error in no command text
+	if (commandText == undefined)
+		return error('settings.json: "command": "COMMAND_HERE" missing');
+
+	// Get options
 	const save = (command.save != undefined) ? command.save : getDefault('save');
 	const show = (command.show != undefined) ? command.show : getDefault('show');
 	const stop = (command.stop != undefined) ? command.stop : getDefault('stop');
@@ -125,16 +118,11 @@ async function executeCommand(n) {
 	const focus = (command.focus != undefined) ? command.focus : getDefault('focus');
 	const terminalName = command.terminal || getDefault('terminal');
 
-	if (commandText == undefined) {
-		vscode.window.showErrorMessage('Missing the "command" key and value in settings.json. A valid example is "command": "make"');
-		console.log(command);
-		return;
-	}
-
 	// Get terminal
 	let terminal;
 	// Get specific terminal
 	if (terminalName) {
+		// Find it
 		for (t of vscode.window.terminals) {
 			if (t.name == terminalName) {
 				terminal = t;
@@ -142,35 +130,36 @@ async function executeCommand(n) {
 			}
 		}
 
-		if (! terminal) {
+		// Create it
+		if (!terminal)
 			terminal = vscode.window.createTerminal({ name: terminalName });
-		}
 	}
 	// Get any terminal
 	else {
+		// Find it
 		terminal = vscode.window.activeTerminal;
 
-		if (! terminal) {
+		// Create it
+		if (!terminal)
 			terminal = vscode.window.createTerminal();
-		}
 	}
 
 	// Show terminal
-	if (show) {
+	if (show)
 		terminal.show(!focus);
-	}
 
-	// Prepare command placeholders
-	commandText = await prepareCommand(commandText, terminal.name, clear);
+	// Save file
+	if (save && vscode.window.activeTextEditor)
+		await vscode.window.activeTextEditor.document.save();
 
-	// Save file and prepare terminal
-	if (save && vscode.window.activeTextEditor) {
-		vscode.window.activeTextEditor.document.save().then(() => {
-			prepareTerminal(terminal, stop, logout, clear, execute, commandText);
-		});
-	} else {
-		prepareTerminal(terminal, stop, logout, clear, execute, commandText);
-	}
+	// Prepare terminal before executing command
+	prepareTerminal(terminal, stop, logout, clear, execute, commandText);
+
+	// Prepare command
+	commandText = await formatCommand(commandText, terminal.name, clear);
+
+	// Send command
+	terminal.sendText(commandText, execute);
 }
 
 async function listCommands(currentGroup = undefined) {
@@ -210,17 +199,15 @@ async function listCommands(currentGroup = undefined) {
 
 	// Wait for the user
 	const picked = await vscode.window.showQuickPick(quickPickItems);
+	if (!picked)
+		return;
 
-	if (picked) {
-		// Execute the command
-		if (picked.isCommand) {
-			executeCommand(picked.n);
-		}
-		// Recursively display the groups
-		else {
-			listCommands(picked.label);
-		}
-	}
+	// Execute the command
+	if (picked.isCommand)
+		executeCommand(picked.n);
+	// Recursively display the groups
+	else
+		listCommands(picked.label);
 }
 
 //
