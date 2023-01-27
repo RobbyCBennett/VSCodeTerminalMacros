@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.11] - 2023 Jan 27
+- Sped up executeCommand and listCommands
+- Simplified error messages
+
 ## [1.0.10] - 2023 Jan 26
 - Fixed descriptions of stop & logout in settings
 

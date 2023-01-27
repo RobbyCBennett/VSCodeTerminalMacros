@@ -17,25 +17,17 @@ const CODES = {
 // Helper Functions
 //
 
-function windowsToWslPath(fileName) {
-	return fileName.split(path.sep).join(path.posix.sep).replace(/^([a-zA-Z]):/, '/mnt/$1');
-}
-
-function getCommands() {
-	return vscode.workspace.getConfiguration().get('terminalMacros.commands');
-}
-
-function getDefault(string) {
-	return vscode.workspace.getConfiguration().get('terminalMacros.default.' + string);
-}
-
 function error(message) {
 	vscode.window.showErrorMessage(`Terminal Macros: ${message}`);
 }
 
-String.prototype.replaceAll = function (oldSubstring, newSubstring) {
-	return this.replace(new RegExp(oldSubstring, 'g'), newSubstring);
-};
+function getConfig() {
+	return vscode.workspace.getConfiguration().get('terminalMacros');
+}
+
+function windowsToWslPath(fileName) {
+	return fileName.split(path.sep).join(path.posix.sep).replace(/^([a-zA-Z]):/, '/mnt/$1');
+}
 
 async function formatCommand(commandText, terminalName, clear) {
 	// Replace general keywords
@@ -61,7 +53,7 @@ async function formatCommand(commandText, terminalName, clear) {
 	return commandText;
 }
 
-async function prepareTerminal(terminal, stop, logout, clear, execute, commandText) {
+function prepareTerminal(terminal, stop, logout, clear, execute, commandText) {
 	// Clear line
 	if (terminal.name == 'cmd' || terminal.name == 'powershell')
 		terminal.sendText(CODES.escape, false);
@@ -89,10 +81,14 @@ async function prepareTerminal(terminal, stop, logout, clear, execute, commandTe
 // Extension Commands
 //
 
-async function executeCommand(n) {
-	const commands = getCommands();
+async function executeCommand(n, config=undefined) {
+	// Get all commands
+	if (config == undefined)
+		config = getConfig();
+	const commands = config.commands;
 	const len = commands.length;
 
+	// Error if no command
 	if (len == 0)
 		return error('settings.json: No commands');
 	else if (isNaN(n) || n < 0 || n >= len)
@@ -108,15 +104,16 @@ async function executeCommand(n) {
 	if (commandText == undefined)
 		return error('settings.json: "command": "COMMAND_HERE" missing');
 
-	// Get options
-	const save = (command.save != undefined) ? command.save : getDefault('save');
-	const show = (command.show != undefined) ? command.show : getDefault('show');
-	const stop = (command.stop != undefined) ? command.stop : getDefault('stop');
-	const logout = (command.logout != undefined) ? command.logout : getDefault('logout');
-	const clear = (command.clear != undefined) ? command.clear : getDefault('clear');
-	const execute = (command.execute != undefined) ? command.execute : getDefault('execute');
-	const focus = (command.focus != undefined) ? command.focus : getDefault('focus');
-	const terminalName = command.terminal || getDefault('terminal');
+	// Get command options
+	const defaults = config.default;
+	const save = (command.save != undefined) ? command.save : defaults.save;
+	const show = (command.show != undefined) ? command.show : defaults.show;
+	const stop = (command.stop != undefined) ? command.stop : defaults.stop;
+	const logout = (command.logout != undefined) ? command.logout : defaults.logout;
+	const clear = (command.clear != undefined) ? command.clear : defaults.clear;
+	const execute = (command.execute != undefined) ? command.execute : defaults.execute;
+	const focus = (command.focus != undefined) ? command.focus : defaults.focus;
+	const terminalName = command.terminal || defaults.terminal;
 
 	// Get terminal
 	let terminal;
@@ -164,7 +161,8 @@ async function executeCommand(n) {
 
 async function listCommands(currentGroup = undefined) {
 	// Get all commands
-	const commands = getCommands();
+	const config = getConfig();
+	const commands = config.commands;
 
 	// Make a list of QuickPickItem objects
 	const groupNames = {};
@@ -204,7 +202,7 @@ async function listCommands(currentGroup = undefined) {
 
 	// Execute the command
 	if (picked.isCommand)
-		executeCommand(picked.n);
+		executeCommand(picked.n, config);
 	// Recursively display the groups
 	else
 		listCommands(picked.label);
