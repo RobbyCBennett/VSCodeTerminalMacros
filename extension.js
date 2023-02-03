@@ -70,9 +70,13 @@ function prepareTerminal(terminal, stop, logout, clear, execute, commandText) {
 
 	// Clear terminal
 	if (clear) {
+		// Clear previous content on screen
+		vscode.commands.executeCommand('workbench.action.terminal.clear');
+
+		// Clear control codes on screen
 		if (terminal.name == 'cmd')
 			terminal.sendText('cls');
-		else
+		else if (stop || logout)
 			terminal.sendText(CODES.clearTerminal, false);
 	}
 }

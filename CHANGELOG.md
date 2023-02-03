@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.12] - 2023 Jan 27
+- Fix for clearing terminals with scrollbars
+
 ## [1.0.11] - 2023 Jan 27
 - Sped up executeCommand and listCommands
 - Simplified error messages
