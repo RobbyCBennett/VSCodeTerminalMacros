@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.0.12] - 2023 Jan 27
+## [1.0.12] - 2023 Feb 3
 - Fix for clearing terminals with scrollbars
 
 ## [1.0.11] - 2023 Jan 27
