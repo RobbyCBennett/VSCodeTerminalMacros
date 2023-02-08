@@ -55,6 +55,8 @@ async function formatCommand(commandText, clear, execute, specialTerminal) {
 	if (editor) {
 		const document = editor.document;
 		let fileName = document.fileName;
+
+		// Fix for WSL path
 		if (specialTerminal == TERMINALS.wsl)
 			fileName = windowsToWslPath(fileName);
 
@@ -183,8 +185,13 @@ async function executeCommand(n, config=undefined) {
 	// Prepare command
 	commandText = await formatCommand(commandText, clear, execute, specialTerminal);
 
+	// Fix for powershell consuming input while stopping
+	const wait = specialTerminal == TERMINALS.powershell && stop;
+
 	// Send command
-	terminal.sendText(commandText, execute);
+	setTimeout(function() {
+		terminal.sendText(commandText, execute);
+	}, wait ? 5 : 0);
 }
 
 async function listCommands(currentGroup = undefined) {
