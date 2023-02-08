@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.13] - 2023 Feb 7
+- Fix for cmd, powershell, and wsl terminals changing names
+
 ## [1.0.12] - 2023 Feb 3
 - Fix for clearing terminals with scrollbars
 
