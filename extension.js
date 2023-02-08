@@ -13,6 +13,12 @@ const CODES = {
 	clearAfter:    '\27',
 };
 
+const TERMINALS = {
+	cmd:        1,
+	powershell: 2,
+	wsl:        3,
+};
+
 //
 // Helper Functions
 //
@@ -29,56 +35,73 @@ function windowsToWslPath(fileName) {
 	return fileName.split(path.sep).join(path.posix.sep).replace(/^([a-zA-Z]):/, '/mnt/$1');
 }
 
-async function formatCommand(commandText, terminalName, clear) {
-	// Replace general keywords
-	const editor = vscode.window.activeTextEditor;
-	commandText = commandText.replaceAll('{recent}', CODES.up);
-	if (/{paste}/.test(commandText))
-		commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
+async function formatCommand(commandText, clear, specialTerminal) {
+	// Replace {recent} format specifier and do nothing else
+	if (/{recent}/.test(commandText)) {
+		commandText = CODES.up;
 
-	// Replace editor keywords
+		// Fix for clearing the screen and then getting a recent command in cmd
+		if (specialTerminal == TERMINALS.cmd && clear)
+			commandText += CODES.up;
+
+		return commandText;
+	}
+
+	// Replace {paste} format specifier using the clipboard
+	commandText = await commandText.replaceAll('{paste}', await vscode.env.clipboard.readText());
+
+	// Replace format specifiers for the editor
+	const editor = vscode.window.activeTextEditor;
 	if (editor) {
 		const document = editor.document;
-		const fileName = (terminalName != 'wsl') ? document.fileName : windowsToWslPath(document.fileName);
+		let fileName = document.fileName;
+		if (specialTerminal == TERMINALS.wsl)
+			fileName = windowsToWslPath(fileName);
+
 		commandText = commandText.replaceAll('{directory}', path.dirname(fileName));
 		commandText = commandText.replaceAll('{file}', path.basename(fileName));
 		commandText = commandText.replaceAll('{path}', fileName);
 		commandText = commandText.replaceAll('{selection}', document.getText(editor.selection));
 	}
 
-	// Fix for clearing the screen and then getting a recent command in cmd
-	if (terminalName == 'cmd' && clear && commandText == CODES.up)
-		commandText = CODES.up + CODES.up;
-
 	return commandText;
 }
 
-function prepareTerminal(terminal, stop, logout, clear, execute, commandText) {
+async function prepareTerminal(terminal, stop, logout, clear, specialTerminal) {
 	// Clear line
-	if (terminal.name == 'cmd' || terminal.name == 'powershell')
+	// if (terminal.name == 'cmd' || terminal.name == 'powershell')
+	if (specialTerminal == TERMINALS.cmd || TERMINALS.powershell)
 		terminal.sendText(CODES.escape, false);
 	else
 		terminal.sendText(CODES.clearBefore + CODES.clearAfter, false);
 
 	// Stop process
 	if (stop)
-		terminal.sendText(CODES.stopProcess);
+		terminal.sendText(CODES.stopProcess, false);
 
 	// Log out of session
 	if (logout)
-		terminal.sendText(CODES.logout);
+		terminal.sendText(CODES.logout, false);
 
 	// Clear terminal
 	if (clear) {
 		// Clear previous content on screen
-		vscode.commands.executeCommand('workbench.action.terminal.clear');
+		await vscode.commands.executeCommand('workbench.action.terminal.clear');
 
 		// Clear control codes on screen
-		if (terminal.name == 'cmd')
+		if (specialTerminal == TERMINALS.cmd)
 			terminal.sendText('cls');
-		else if (stop || logout)
+		else
 			terminal.sendText(CODES.clearTerminal, false);
 	}
+}
+
+function getSpecialTerminalEnum(terminal) {
+	if (path.extname(terminal.creationOptions.shellPath) != '.exe')
+		return;
+
+	const name = path.parse(terminal.creationOptions.shellPath).name;
+	return TERMINALS[name];
 }
 
 //
@@ -124,9 +147,9 @@ async function executeCommand(n, config=undefined) {
 	// Get specific terminal
 	if (terminalName) {
 		// Find it
-		for (t of vscode.window.terminals) {
-			if (t.name == terminalName) {
-				terminal = t;
+		for (existingTerminal of vscode.window.terminals) {
+			if (existingTerminal.name == terminalName) {
+				terminal = existingTerminal;
 				break;
 			}
 		}
@@ -153,11 +176,13 @@ async function executeCommand(n, config=undefined) {
 	if (save && vscode.window.activeTextEditor)
 		await vscode.window.activeTextEditor.document.save();
 
+	const specialTerminal = getSpecialTerminalEnum(terminal);
+
 	// Prepare terminal before executing command
-	prepareTerminal(terminal, stop, logout, clear, execute, commandText);
+	await prepareTerminal(terminal, stop, logout, clear, specialTerminal);
 
 	// Prepare command
-	commandText = await formatCommand(commandText, terminal.name, clear);
+	commandText = await formatCommand(commandText, clear, specialTerminal);
 
 	// Send command
 	terminal.sendText(commandText, execute);
