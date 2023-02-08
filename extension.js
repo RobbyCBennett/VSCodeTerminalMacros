@@ -219,8 +219,10 @@ async function listCommands(currentGroup = undefined) {
 function activate(context) {
 	// Implement activationEvents here, defined in package.json
 	// activationEvents can have keyboard shortcuts, and commands show up in the command palette
-	context.subscriptions.push(vscode.commands.registerCommand('terminalMacros.executeCommand', executeCommand));
-	context.subscriptions.push(vscode.commands.registerCommand('terminalMacros.listCommands', listCommands));
+	context.subscriptions.push(
+		vscode.commands.registerCommand('terminalMacros.executeCommand', executeCommand),
+		vscode.commands.registerCommand('terminalMacros.listCommands', listCommands),
+	);
 }
 
 function deactivate() {}
