@@ -35,13 +35,13 @@ function windowsToWslPath(fileName) {
 	return fileName.split(path.sep).join(path.posix.sep).replace(/^([a-zA-Z]):/, '/mnt/$1');
 }
 
-async function formatCommand(commandText, clear, specialTerminal) {
+async function formatCommand(commandText, clear, execute, specialTerminal) {
 	// Replace {recent} format specifier and do nothing else
 	if (/{recent}/.test(commandText)) {
 		commandText = CODES.up;
 
 		// Fix for clearing the screen and then getting a recent command in cmd
-		if (specialTerminal == TERMINALS.cmd && clear)
+		if (specialTerminal == TERMINALS.cmd && clear && execute)
 			commandText += CODES.up;
 
 		return commandText;
@@ -69,8 +69,7 @@ async function formatCommand(commandText, clear, specialTerminal) {
 
 async function prepareTerminal(terminal, stop, logout, clear, specialTerminal) {
 	// Clear line
-	// if (terminal.name == 'cmd' || terminal.name == 'powershell')
-	if (specialTerminal == TERMINALS.cmd || TERMINALS.powershell)
+	if (specialTerminal == TERMINALS.cmd || specialTerminal == TERMINALS.powershell)
 		terminal.sendText(CODES.escape, false);
 	else
 		terminal.sendText(CODES.clearBefore + CODES.clearAfter, false);
@@ -182,7 +181,7 @@ async function executeCommand(n, config=undefined) {
 	await prepareTerminal(terminal, stop, logout, clear, specialTerminal);
 
 	// Prepare command
-	commandText = await formatCommand(commandText, clear, specialTerminal);
+	commandText = await formatCommand(commandText, clear, execute, specialTerminal);
 
 	// Send command
 	terminal.sendText(commandText, execute);
