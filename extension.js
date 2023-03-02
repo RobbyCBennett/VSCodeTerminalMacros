@@ -98,10 +98,17 @@ async function prepareTerminal(terminal, stop, logout, clear, specialTerminal) {
 }
 
 function getSpecialTerminalEnum(terminal) {
-	if (path.extname(terminal.creationOptions.shellPath) != '.exe')
+	// If terminal not created by a path in this filesystem, then skip
+	const shellPath = terminal.creationOptions.shellPath;
+	if (!shellPath)
 		return;
 
-	const name = path.parse(terminal.creationOptions.shellPath).name;
+	// If not a Windows executable, then skip
+	if (path.extname(shellPath) != '.exe')
+		return;
+
+	// Get the name of the Windows executable
+	const name = path.parse(shellPath).name;
 	return TERMINALS[name];
 }
 

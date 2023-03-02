@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.0.14] - 2023 Mar 1
+- Fix for terminals created without a shell executable (Remote Explorer)
+
 ## [1.0.13] - 2023 Feb 7
 - Fix for cmd, powershell, and wsl terminals changing names
 
